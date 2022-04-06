@@ -1,0 +1,17 @@
+---
+- name: cron module demo
+  hosts: localhost
+  become: yes
+  become_user: "{{ user | default('ubuntu') }}"
+  tasks:
+   - name: "sample cronjob to delete files under dummy folder"
+     ansible.builtin.cron:
+      name: "removercron"
+      state: present
+      minute: "*/1"
+      hour: "*"
+      day: "*"
+      month: "*"
+      user: "{{ cronUser | default('') }}"
+      weekday: "*"
+      job: 'find /tmp/dummy/* -mmin +{{ time | default("60") }} -exec rm {} \;'
